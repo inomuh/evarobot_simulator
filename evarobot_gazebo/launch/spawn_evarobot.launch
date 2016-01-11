@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="world_path" default="worlds/empty.world"/>
+<!--
+    -[urdf|sdf|trimesh|gazebo] - specify incoming xml is urdf, sdf or trimesh format. gazebo arg is deprecated in ROS Hydro
+    -[file|param|database] [<file_name>|<param_name>|<model_name>] - source of the model xml or the trimesh file
+    -model <model_name> - name of the model to be spawned.
+    -reference_frame <entity_name> - optinal: name of the model/body where initial pose is defined.
+                                     If left empty or specified as "world", gazebo world frame is used.
+    -gazebo_namespace <gazebo ros_namespace> - optional: ROS namespace of gazebo offered ROS interfaces.  Defaults to /gazebo/ (e.g. /gazebo/spawn_model).
+    -robot_namespace <robot ros_namespace> - optional: change ROS namespace of gazebo-plugins.
+    -unpause - optional: !!!Experimental!!! unpause physics after spawning model
+    -wait - optional: !!!Experimental!!! wait for model to exist
+    -trimesh_mass <mass in kg> - required if -trimesh is used: linear mass
+    -trimesh_ixx <moment of inertia in kg*m^2> - required if -trimesh is used: moment of inertia about x-axis
+    -trimesh_iyy <moment of inertia in kg*m^2> - required if -trimesh is used: moment of inertia about y-axis
+    -trimesh_izz <moment of inertia in kg*m^2> - required if -trimesh is used: moment of inertia about z-axis
+    -trimesh_gravity <bool> - required if -trimesh is used: gravity turned on for this trimesh model
+    -trimesh_material <material name as a string> - required if -trimesh is used: E.g. Gazebo/Blue
+    -trimesh_name <link name as a string> - required if -trimesh is used: name of the link containing the trimesh
+    -x <x in meters> - optional: initial pose, use 0 if left out
+    -y <y in meters> - optional: initial pose, use 0 if left out
+    -z <z in meters> - optional: initial pose, use 0 if left out
+    -R <roll in radians> - optional: initial pose, use 0 if left out
+    -P <pitch in radians> - optional: initial pose, use 0 if left out
+    -Y <yaw in radians> - optional: initial pose, use 0 if left out
+    -J <joint_name joint_position> - optional: initialize the specified joint at the specified value
+
+-->
+
+  
+	<arg name="name" default="evarobot"/>
+	<arg name="x" default="2.5"/>
+	<arg name="y" default="2.5"/>
+	<arg name="z" default="0"/>
+	<arg name="roll" default="0"/>
+	<arg name="pitch" default="0"/>
+	<arg name="yaw" default="0"/>
+	<arg name="robot_ns" default="/"/>
+ 
+  
+	<!-- Convert an xacro and put on parameter server -->
+	<param name="robot_description" command="$(find xacro)/xacro.py $(find evarobot_description)/urdf/evarobot.urdf.xacro" />
+
+
+	<!-- Spawn evarobot into Gazebo -->
+	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+		 args="-param robot_description
+					 -urdf
+					 -x $(arg x)
+					 -y $(arg y)
+					 -z $(arg z)
+					 -R $(arg roll)
+					 -P $(arg pitch)
+					 -Y $(arg yaw)
+					 -model $(arg name)
+					 -robot_namespace $(arg robot_ns)"
+	respawn="false" output="screen"/>
+		
+		
+		
+	<group ns="$(arg robot_ns)">
+		<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+			respawn="false" output="screen">
+			<param name="tf_prefix" type="string" value="$(arg robot_ns)" />
+			<remap from="/joint_states" to="/joint_states" />
+		</node>
+
+		<node name="joint_state_publisher" pkg="joint_state_publisher"
+			type="joint_state_publisher" >
+			<param name="use_gui" type="bool" value="false" />
+			<param name="robot_description" command="$(find xacro)/xacro.py $(find evarobot_description)/urdf/evarobot.urdf.xacro" />	
+		</node>		
+  </group>
+  
+
+</launch>

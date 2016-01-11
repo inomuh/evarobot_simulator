@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>evarobot_simulator</name>
+  <version>0.0.0</version>
+  <description>
+    The evarobot_simulator meta package provides all the basic packages for Gazebo model.
+  </description>
+  <author>Mehmet Akcakoca</author>
+  <maintainer email="akcakocamehmet@gmail.com">Mehmet Akcakoca</maintainer>
+  <license>BSD</license>
+  <url type="website">http://ros.org/wiki/evarobot_simulator</url>
+  <url type="repository">https://github.com/inomuh/evarobot_simulator</url>
+  <url type="bugtracker">https://github.com/inomuh/evarobot_simulator/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>evarobot_gazebo</run_depend>
+  
+  <export>
+    <metapackage/>
+  </export>
+</package>
