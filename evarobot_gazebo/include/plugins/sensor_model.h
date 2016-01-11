@@ -32,7 +32,7 @@
 #include <sdf/sdf.hh>
 #include <gazebo/math/Vector3.hh>
 
-#include <evarobot_description/SensorModelConfig.h>
+#include <evarobot_gazebo/SensorModelConfig.h>
 #include <numeric>
 
 namespace gazebo {
