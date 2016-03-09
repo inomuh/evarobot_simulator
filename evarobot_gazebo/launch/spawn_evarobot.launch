@@ -72,6 +72,10 @@
 			<param name="robot_description" command="$(find xacro)/xacro.py $(find evarobot_description)/urdf/evarobot.urdf.xacro" />	
 		</node>		
   </group>
-  
+  <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen" >
+    <param name="robot_name" value="$(arg robot_ns)" />
+    <remap from="/twist_marker_server/cmd_vel" to="cmd_vel" />
+  </node>
+
 
 </launch>
