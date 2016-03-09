@@ -26,6 +26,7 @@ find_package(catkin REQUIRED COMPONENTS
   polled_camera
   camera_info_manager
   im_msgs
+  interactive_marker_twist_server
 )
 
 include (FindPkgConfig)
@@ -149,7 +150,7 @@ install(DIRECTORY include/
    FILES_MATCHING PATTERN "*.h"
 )
 
-foreach(dir cfg launch map rviz worlds)
+foreach(dir cfg launch map worlds)
     install(DIRECTORY ${dir}/
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
 endforeach()
