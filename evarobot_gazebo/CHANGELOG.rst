@@ -2,8 +2,8 @@
 Changelog for package evarobot_gazebo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2016-03-09)
+------------------
 * add interactive marker twist
 * add interactive marker twist
 * move rviz to evarobot_viz
