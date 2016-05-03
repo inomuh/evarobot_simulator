@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(evarobot_gazebo)
-
+SET(CMAKE_CXX_FLAGS "-std=c++0x")
 find_package(catkin REQUIRED COMPONENTS
   urdf
   message_generation 
@@ -26,8 +26,26 @@ find_package(catkin REQUIRED COMPONENTS
   polled_camera
   camera_info_manager
   im_msgs
-  interactive_marker_twist_server
+  interactive_marker_twist_server  
 )
+
+find_package(Qt4 REQUIRED)
+find_package(Protobuf REQUIRED)
+
+include (${QT_USE_FILE})
+add_definitions(${QT_DEFINITIONS})
+
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
+
+qt4_wrap_cpp(QT_MOC_HPP include/plugins/evarobot_widget.h)
+
+
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
+include_directories(${Qt4Widgets_INCLUDE_DIRS})
+
+
 
 include (FindPkgConfig)
 if (PKG_CONFIG_FOUND)
@@ -114,12 +132,6 @@ catkin_package(
 add_dependencies(${PROJECT_NAME}_gencfg ${catkin_EXPORTED_TARGETS})
 
 
-
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
-
-
 add_library(im_gazebo_ros_bumper src/im_gazebo_ros_bumper.cpp)
 add_dependencies(im_gazebo_ros_bumper gazebo_msgs_gencpp)
 target_link_libraries(im_gazebo_ros_bumper ${GAZEBO_LIBRARIES} ${Boost_LIBRARIES} ContactPlugin ${catkin_LIBRARIES})
@@ -132,12 +144,24 @@ add_library(im_gazebo_ros_sonar src/im_gazebo_ros_sonar.cpp)
 add_dependencies(im_gazebo_ros_sonar ${PROJECT_NAME}_gencfg)
 target_link_libraries(im_gazebo_ros_sonar ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
 
+add_library(evarobot_widget SHARED ${QT_MOC_HPP} src/evarobot_widget.cpp)
+add_dependencies(evarobot_widget ${PROJECT_NAME}_gencfg)
+target_link_libraries(evarobot_widget ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${QT_LIBRARIES} ${PROTOBUF_LIBRARIES})
 
+add_library(evarobot_objects src/evarobot_objects.cpp)
+add_dependencies(evarobot_objects ${PROJECT_NAME}_gencfg)
+target_link_libraries(evarobot_objects ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
+
+#add_library(mazefactory src/MazeFactory.cc)
+#add_dependencies(mazefactory ${PROJECT_NAME}_gencfg)
+#target_link_libraries(mazefactory ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
 
 install(TARGETS 
 	im_gazebo_ros_sonar
   im_gazebo_ros_bumper
   evarobot_ros_bumper
+  evarobot_widget
+  evarobot_objects
 	
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

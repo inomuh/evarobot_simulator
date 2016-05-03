@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-	<arg name="world_path" default="worlds/empty.world"/>
+	<arg name="world_path" default="$(find evarobot_gazebo)/worlds/empty.world"/>
 	<arg name="robot_ns" default="/"/>
 	
 	<include file="$(find evarobot_gazebo)/launch/start_gazebo.launch" >

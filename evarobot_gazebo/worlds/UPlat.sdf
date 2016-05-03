@@ -1,5 +1,9 @@
 <sdf version='1.4'>
   <world name='default'>
+		<gui>
+      <plugin name="sample" filename="libevarobot_widget.so"/>
+    </gui>
+
     <light name='sun' type='directional'>
       <cast_shadows>1</cast_shadows>
       <pose>0 0 10 0 -0 0</pose>
