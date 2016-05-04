@@ -12,7 +12,12 @@ EvarobotWidget::EvarobotWidget()
   : GUIPlugin()	
 {
   this->counter = 0;
+	int argc = 0;
+  ros::init(argc, NULL, "evarobot_widget");  
   
+  node_handle_ = new ros::NodeHandle;
+  this->client_ = node_handle_->serviceClient<im_msgs::AddObject>("evarobot_competition/AddObject");
+	this->startclient_ = node_handle_->serviceClient<std_srvs::Empty>("evarobot_competition/Start");
   // Set the frame background and foreground colors
   this->setStyleSheet(
     "QFrame { background-color : rgba(100, 100, 100, 255); color : rgba(224, 224, 224, 224) };");
@@ -35,6 +40,10 @@ EvarobotWidget::EvarobotWidget()
 	QPushButton *sphere_button = new QPushButton(tr("Add SPHERE"));
   connect(sphere_button, SIGNAL(clicked()), this, SLOT(AddSphereButton()));
 	sphere_button->setStyleSheet("border-radius: 10px; padding: 2px 4px;");
+	
+	QPushButton *start_button = new QPushButton(tr("START"));
+  connect(start_button, SIGNAL(clicked()), this, SLOT(StartButton()));
+	start_button->setStyleSheet("border-radius: 10px; padding: 2px 4px;");
 	
 	
 	// ComboBox Color
@@ -200,6 +209,8 @@ EvarobotWidget::EvarobotWidget()
   gridlayout->addWidget(textSizeSphereR,5,3);
   gridlayout->addWidget(sphere_button,8,3);
   
+  gridlayout->addWidget(start_button,9,0,1,4);
+
 	
 	mainFrame->setLayout(gridlayout);
   mainLayout->addWidget(mainFrame);
@@ -210,7 +221,7 @@ EvarobotWidget::EvarobotWidget()
 	this->setLayout(mainLayout);
 
   this->move(10, 10);
-  this->resize(500, 250);
+  this->resize(500, 270);
 
   this->node = transport::NodePtr(new transport::Node());
   this->node->Init();
@@ -222,6 +233,28 @@ EvarobotWidget::~EvarobotWidget()
 {
 }
 
+/////////////////////////////////////////////////
+void EvarobotWidget::CallService(float x, float y, float z, int color)
+{
+	im_msgs::AddObject srv;
+
+	srv.request.object_pose.x = x;
+	srv.request.object_pose.y = y;
+	srv.request.object_pose.z = z;
+	srv.request.color = color;
+	
+	this->client_.call(srv);
+
+  ros::spinOnce();
+}
+
+/////////////////////////////////////////////////
+void EvarobotWidget::StartButton()
+{
+	std_srvs::Empty srv;
+	this->startclient_.call(srv);
+	ros::spinOnce();
+}
 
 /////////////////////////////////////////////////
 void EvarobotWidget::AddBoxButton()
@@ -248,9 +281,12 @@ void EvarobotWidget::AddBoxButton()
 	msg.mutable_box()->mutable_size()->set_y(textSizeY->text().toFloat());
 	msg.mutable_box()->mutable_size()->set_z(textSizeZ->text().toFloat());
 
-	
-	
 	this->objectPub->Publish(msg);
+	this->CallService(textBoxPoseX->text().toFloat(),
+										textBoxPoseY->text().toFloat(), 
+										textSizeZ->text().toFloat()*0.5, 
+										combobox_color->currentIndex());
+
 }
 
 void EvarobotWidget::AddCylinderButton()
@@ -278,7 +314,10 @@ void EvarobotWidget::AddCylinderButton()
 	msg.mutable_cylinder()->set_length(textSizeCylinderL->text().toFloat());
 	
 	this->objectPub->Publish(msg);
-	
+	this->CallService(textCylinderPoseX->text().toFloat(),
+										textCylinderPoseY->text().toFloat(), 
+										textSizeCylinderR->text().toFloat(), 
+										combocylinder_color->currentIndex());
 }
 
 void EvarobotWidget::AddSphereButton()
@@ -304,7 +343,11 @@ void EvarobotWidget::AddSphereButton()
 	// Set Geometry Size
 	msg.mutable_sphere()->set_radius(textSizeSphereR->text().toFloat());
 	
-	this->objectPub->Publish(msg);
+	this->objectPub->Publish(msg); 
+	this->CallService(textSpherePoseX->text().toFloat(),
+										textSpherePoseY->text().toFloat(), 
+										textSizeSphereR->text().toFloat(), 
+										combosphere_color->currentIndex());
 }
 
 

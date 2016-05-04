@@ -30,8 +30,8 @@
 
   
 	<arg name="name" default="evarobot"/>
-	<arg name="x" default="2.5"/>
-	<arg name="y" default="2.5"/>
+	<arg name="x" default="-10.0"/>
+	<arg name="y" default="1.12"/>
 	<arg name="z" default="0"/>
 	<arg name="roll" default="0"/>
 	<arg name="pitch" default="0"/>

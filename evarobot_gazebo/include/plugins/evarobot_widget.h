@@ -10,10 +10,9 @@
 #include <gazebo/math/Vector3.hh>
 #include "gazebo/msgs/msgs.hh"
 
-
-//#include <ignition/math/Pose3.hh>
-//#include <ignition/math/Vector3.hh>
-
+#include <ros/ros.h>
+#include "im_msgs/AddObject.h"
+#include "std_srvs/Empty.h"
 
 #endif
 
@@ -34,6 +33,7 @@ namespace gazebo
       protected slots: void AddBoxButton();
       protected slots: void AddCylinderButton();
       protected slots: void AddSphereButton();
+      protected slots: void StartButton();
 
       /// \brief Counter used to create unique model names
       private: unsigned int counter;
@@ -75,6 +75,12 @@ namespace gazebo
             
       private: QComboBox *combosphere_color;
       
+      ros::NodeHandle * node_handle_;
+			ros::ServiceClient client_;
+			ros::ServiceClient startclient_;
+
+			void CallService(float x, float y, float z, int color);   
+              
       
     };
 }

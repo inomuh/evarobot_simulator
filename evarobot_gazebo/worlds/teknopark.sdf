@@ -1,5 +1,10 @@
+<?xml version="1.0" ?>
 <sdf version='1.4'>
   <world name='default'>
+		<gui>
+      <plugin name="evarobotWidget" filename="libevarobot_widget.so"/>
+    </gui>
+    <plugin name="maze" filename="libevarobot_map.so"/>
     <light name='sun' type='directional'>
       <cast_shadows>1</cast_shadows>
       <pose>0 0 10 0 -0 0</pose>

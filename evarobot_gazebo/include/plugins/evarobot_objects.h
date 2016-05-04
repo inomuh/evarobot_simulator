@@ -2,8 +2,10 @@
 #include <random>
 #include "gazebo/physics/physics.hh"
 #include "gazebo/common/common.hh"
+#include <gazebo/common/Plugin.hh>
 #include "gazebo/gazebo.hh"
 #include <gazebo/math/gzmath.hh>
+
 
 
 namespace gazebo {
@@ -12,7 +14,6 @@ namespace gazebo {
 
     public:
       EvarobotObjects();
-
       void Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf);
 
       void AddObject(ConstGeometryPtr &msg);
@@ -47,7 +48,8 @@ namespace gazebo {
       sdf::SDFPtr modelSDF;
             
       int objectNo;
-
+     
+        
   };
 }
 

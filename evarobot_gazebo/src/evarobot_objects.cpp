@@ -22,7 +22,8 @@ void EvarobotObjects::Load(physics::WorldPtr _parent, sdf::ElementPtr _sdf)
 
 void EvarobotObjects::AddObject(ConstGeometryPtr &msg)
 {
-	
+	std::cout << "Add Object" << std::endl;
+
 	sdf::ElementPtr model = LoadModel();
   sdf::ElementPtr base_link = model->GetElement("link");
 	float posX, posY, posZ;
@@ -34,32 +35,51 @@ void EvarobotObjects::AddObject(ConstGeometryPtr &msg)
 		posZ = msg->points(i).z();
 	}
 	
+
+	
+	
 	if(msg->type() == gazebo::msgs::Geometry::BOX 
 	|| msg->type() == gazebo::msgs::Geometry::PLANE 
 	|| msg->type() == gazebo::msgs::Geometry::MESH)
 	{
 		if(msg->type() == gazebo::msgs::Geometry::BOX)
+		{
 			CreateBoxVisual(msg->box().size().x(), msg->box().size().y(), msg->box().size().z(), base_link, 0);
+			//this->CallService(posX, posY, posZ, 0);
+		}
 		else if(msg->type() == gazebo::msgs::Geometry::PLANE)
+		{
 			CreateBoxVisual(msg->box().size().x(), msg->box().size().y(), msg->box().size().z(), base_link, 1);
+			//this->CallService(posX, posY, posZ, 1);
+		}
 		else if(msg->type() == gazebo::msgs::Geometry::MESH)
+		{
 			CreateBoxVisual(msg->box().size().x(), msg->box().size().y(), msg->box().size().z(), base_link, 2);	
+			//this->CallService(posX, posY, posZ, 2);
+		}
 		CreateBoxCollision(msg->box().size().x(), msg->box().size().y(), msg->box().size().z(), base_link);
-		
 	}
 	else if(msg->type() == gazebo::msgs::Geometry::CYLINDER 
 	|| msg->type() == gazebo::msgs::Geometry::IMAGE 
 	|| msg->type() == gazebo::msgs::Geometry::TRIANGLE_FAN)
 	{
 		if(msg->type() == gazebo::msgs::Geometry::CYLINDER)
+		{
 			CreateCylinderVisual(msg->cylinder().radius(), msg->cylinder().length(), base_link, 0);
+			//this->CallService(posX, posY, posZ, 0);
+		}
 		else if(msg->type() == gazebo::msgs::Geometry::IMAGE)
+		{
 			CreateCylinderVisual(msg->cylinder().radius(), msg->cylinder().length(), base_link, 1);
+			//this->CallService(posX, posY, posZ, 1);
+		}
 		else if(msg->type() == gazebo::msgs::Geometry::TRIANGLE_FAN)
+		{
 			CreateCylinderVisual(msg->cylinder().radius(), msg->cylinder().length(), base_link, 2);
+			//this->CallService(posX, posY, posZ, 2);
+		}
 		
-		CreateCylinderCollision(msg->cylinder().radius(), msg->cylinder().length(), base_link);
-	
+		CreateCylinderCollision(msg->cylinder().radius(), msg->cylinder().length(), base_link);	
 	}
 	else if(msg->type() == gazebo::msgs::Geometry::SPHERE 
 	|| msg->type() == gazebo::msgs::Geometry::HEIGHTMAP 
@@ -67,13 +87,22 @@ void EvarobotObjects::AddObject(ConstGeometryPtr &msg)
 	{
 	
 		if(msg->type() == gazebo::msgs::Geometry::SPHERE)
+		{
 			CreateSphereVisual(msg->sphere().radius(), base_link, 0);
+			//this->CallService(posX, posY, posZ, 0);
+		}
 		else if(msg->type() == gazebo::msgs::Geometry::HEIGHTMAP)
+		{
 			CreateSphereVisual(msg->sphere().radius(), base_link, 1);
+			//this->CallService(posX, posY, posZ, 1);
+		}
 		else if(msg->type() == gazebo::msgs::Geometry::LINE_STRIP)
+		{
 			CreateSphereVisual(msg->sphere().radius(), base_link, 2);
+			//this->CallService(posX, posY, posZ, 2);
+		}
 		
-		CreateSphereCollision(msg->sphere().radius(), base_link);		
+		CreateSphereCollision(msg->sphere().radius(), base_link);	
 	}
 	else
 	{
