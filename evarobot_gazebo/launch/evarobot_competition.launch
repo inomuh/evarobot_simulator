@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="world_path" default="$(find evarobot_gazebo)/worlds/ESC2016.sdf"/>
+	<arg name="robot_ns" default="/"/>
+	
+	<include file="$(find evarobot_gazebo)/launch/start_gazebo.launch" >
+		<arg name="world_path" value="$(arg world_path)"/>
+	</include>
+
+	<include file="$(find evarobot_gazebo)/launch/spawn_evarobot.launch">
+		<arg name="robot_ns" value="$(arg robot_ns)"/>
+		<arg name="x" value="0.0"/>
+		<arg name="y" value="0.0"/>
+		<arg name="yaw" value="-1.5708"/>
+	</include>
+</launch>
